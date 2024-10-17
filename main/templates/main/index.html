@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <header>
+        <h1>Главная страница</h1>
+    </header>
+    <p>У нас тут есть куча ништяков, таких как:</p>
+    <div class="content">
+        {% block content %}
+        {% for product in products %}
+            <ol>{{ product }}</ol>
+        {% endfor %}
+    {% endblock %}
+    </div>
+    <p>И это по ценам <b>2012(©)(</b> года! Зашибись же!</p>
+    <footer>
+        <p>Among us, Inc. Все права типа защищены.</p>
+    </footer>
+</body>
+</html>
