@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Клининговая компания «Мой Не Сам»{% endblock %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --light-violet: #f0e6ff;
+            --dark-violet: #330066;
+            --medium-violet: #b26bff;
+            --hover-violet: #d8b9d8;
+            --button-violet: #9932cc;
+            --button-hover-violet: #8a2be2;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            background-color: var(--light-violet);
+            color: var(--dark-violet);
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .container {
+            flex: 1;
+        }
+
+        footer {
+            margin-top: auto;
+            background-color: var(--medium-violet);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .btn-custom {
+            background-color: var(--button-violet);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: var(--button-hover-violet);
+        }
+
+        .custom-navbar {
+            padding: 20px 0;
+            background-color: var(--light-violet);
+            color: darkviolet;
+        }
+
+        .custom-navbar .navbar-brand {
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+            color: darkviolet;
+        }
+
+        .custom-navbar .navbar-brand img {
+            height: 60px;
+            margin-right: 15px;
+        }
+
+        .custom-navbar .navbar-nav {
+            margin-right: 20px;
+        }
+
+        .custom-navbar .navbar-nav .nav-link {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: darkviolet; /* Цвет ссылок навигации */
+        }
+
+        .custom-navbar .navbar-nav .nav-link:hover {
+            color: var(--hover-violet); /* Цвет ссылок при наведении */
+        }
+
+        .hero {
+            background-color: var(--medium-violet);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 60px 20px 40px 20px;
+            position: relative;
+            margin-top: 0; /* Убедитесь, что навбар не перекрывает герой */
+        }
+
+        .hero-text h1, .hero-text h3 {
+            color: white;
+        }
+
+        .hero-image img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .btn.btn-primary {
+            background-color: var(--button-violet);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn.btn-primary:hover {
+            background-color: var(--button-hover-violet);
+        }
+
+        .container h2 {
+            color: var(--dark-violet);
+        }
+
+        .service-card {
+            background-color: var(--light-violet);
+            color: var(--dark-violet);
+            border: 1px solid var(--medium-violet);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin: 0;
+            transition: transform 0.3s ease-in-out;
+            height: 100%;
+            text-align: center;
+        }
+
+        .service-card:hover {
+            transform: scale(1.1);
+            background-color: var(--hover-violet);
+        }
+
+        .services-section {
+            padding: 60px 0;
+            background-color: var(--light-violet);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg custom-navbar shadow-sm">
+        <a class="navbar-brand font-weight-bold" href="{% url 'home' %}">
+            {% load static %}
+        <img src="{% static 'img/logo.png' %}?v=2" alt="Логотип">Мой не Сам</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                    {% if not user.is_superuser %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'create_request' %}">Создать заявку</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'request_list' %}">Мои заявки</a>
+                        </li>
+                    {% endif %}
+                    {% if user.is_superuser %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin_panel' %}">Админка</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Регистрация</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Авторизация</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        <div class="container text-center">
+            <p>© 2024 «Мой Не Сам». Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

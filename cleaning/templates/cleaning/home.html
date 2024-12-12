@@ -1,0 +1,191 @@
+{% extends "cleaning/base_generic.html" %}
+
+{% block title %}«Мой Не Сам»{% endblock %}
+
+{% block content %}
+{% load static %}
+<style>
+    :root {
+        --light-violet: #f8e9fa;
+        --medium-violet: #d67ae8;
+        --dark-violet: #581c87;
+        --button-violet: #6a0dad;
+        --button-hover-violet: #551a8b;
+        --hover-violet: #e0b0ff;
+    }
+
+    body {
+        background-color: var(--light-violet);
+    }
+
+    .hero {
+        background-color: var(--medium-violet);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 60px 20px 40px 20px;
+        position: relative;
+        overflow: hidden;
+        min-height: 600px;
+    }
+
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
+        z-index: 1;
+    }
+
+    .hero-text {
+        z-index: 2;
+        max-width: 50%;
+        padding-right: 20px;
+    }
+
+    .hero-text h1, .hero-text h3 {
+        color: white;
+    }
+
+    .hero-text h1 {
+        font-size: 2.5em;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .hero-text h3 {
+        font-size: 1.5em;
+        margin-bottom: 40px;
+    }
+
+    .hero-image {
+        z-index: 1;
+        position: relative;
+        width: 50%;
+        height: 100%;
+    }
+
+    .hero-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+        transition: transform 0.5s ease;
+    }
+
+    .hero-image img:hover {
+        transform: scale(1.05);
+    }
+
+    .btn.btn-primary {
+        background-color: var(--button-violet);
+        border: none;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-size: 1rem;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn.btn-primary:hover {
+        background-color: var(--button-hover-violet);
+    }
+
+    .container h2 {
+        color: var(--dark-violet);
+    }
+
+    .service-card {
+        background-color: var(--light-violet);
+        color: var(--dark-violet);
+        border: 1px solid var(--medium-violet);
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin: 0;
+        transition: transform 0.3s ease-in-out;
+        height: 100%;
+        text-align: center;
+    }
+
+    .service-card:hover {
+        transform: scale(1.1);
+        background-color: var(--hover-violet);
+    }
+
+    .services-section {
+        padding: 60px 0;
+        background-color: var(--light-violet);
+    }
+</style>
+
+<div class="hero">
+    <div class="hero-text">
+        <h1>Салам{% if user.is_authenticated %}, <span>{{ user.username }}</span>{% endif %}, и добро пожаловать на сайт клининга - Мой Не Сам!</h1>
+        <h3>Наш девиз чистоты: "Пока мы моём, вы чиллите."</h3>
+        {% if not user.is_authenticated %}
+        <a href="{% url 'register' %}" class="btn btn-primary">Регистрация</a>
+        <a href="{% url 'login' %}" class="btn btn-primary" style="margin-left: 15px;">Авторизация</a>
+        {% endif %}
+    </div>
+    <div class="hero-image">
+        <img src="{% static 'img/hero.jpg' %}" alt="Hero Image">
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center mb-4">Наша история</h2>
+            <p> Мы основали компанию "Мой Не Сам" в 2010 году с целью предоставить качественные услуги по уборке домов и офисов. Начав с небольшого количества клиентов, мы быстро набрали популярность благодаря нашей профессионализму и ответственному подходу к работе. Сегодня мы гордимся тем, что можем предложить широкий спектр услуг по уборке и химчистке, а также работаем с множеством доверяющих нас клиентов.</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center mb-4">И что же такое этот ваш "Клининг"?</h2>
+            <p> Профессиональная уборка помещений специализированной компанией. Она предусматривает специальный инвентарь, технику нового поколения - это мопы и тряпки, роторные и экстракторные машины, промышленные пылесосы. А так же чистящие и моющие средства современных технологий. Кроме этого, обязательно следует учитывать гипоаллергенность химии! Плюс грамотный персонал - который прошел специальное обучение. К сожалению далеко не все компании могут похвастаться всем вышеперечисленным и предоставить действительно качественные услуги. Многие просто экономят средства используя бытовое оборудование и дешевые расходные материалы.</p>
+        </div>
+    </div>
+</div>
+
+<div class="services-section container">
+    <h2 class="text-center mb-5">Наши услуги</h2>
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="service-card">
+                <img src="{% static 'img/common_clean.png' %}" alt="Общая уборка" style="width: 100%; height: 250px; object-fit: cover; margin-bottom: 20px;">
+                <h5>Общая уборка</h5>
+                <p>Полная уборка вашего дома или офиса. И всё будет пахнуть розами!</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="service-card">
+                <img src="{% static 'img/house-cleaning.jpg' %}" alt="Генеральная уборка" style="width: 100%; height: 250px; object-fit: cover; margin-bottom: 20px;">
+                <h5>Генеральная уборка</h5>
+                <p>Тщательная уборка с акцентом на каждую деталь. Даже на трупики тараканов.</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="service-card">
+                <img src="{% static 'img/clean3.png' %}" alt="Послестроительная уборка" style="width: 100%; height: 250px; object-fit: cover; margin-bottom: 20px;">
+                <h5>Послестроительная уборка</h5>
+                <p>Уборка после ремонта, строительства или реконструкции. Уберем монтажную пену, сгоним пыль.</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="service-card">
+                <img src="{% static 'img/furntire_clean.jpg' %}" alt="Химчистка ковров и мебели" style="width: 100%; height: 250px; object-fit: cover; margin-bottom: 20px;">
+                <h5>Химчистка ковров и мебели</h5>
+                <p>Профессиональная химчистка вашего ковра или дивана от каждого следа присутствия котов.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

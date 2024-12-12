@@ -1,0 +1,270 @@
+{% extends "cleaning/base_generic.html" %}
+
+{% block title %}Панель администратора{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --light-violet: #f8e9fa;
+        --medium-violet: #d67ae8;
+        --dark-violet: #581c87;
+        --button-violet: #6a0dad;
+        --button-hover-violet: #551a8b;
+    }
+
+    body {
+        background-color: var(--light-violet);
+    }
+
+    .admin-container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin-top: 50px;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .admin-title {
+        color: var(--dark-violet);
+        font-size: 2em;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .admin-table th {
+        background-color: var(--medium-violet);
+        color: white;
+        text-align: center;
+        font-size: 1.2em;
+    }
+
+    .admin-table td {
+        text-align: center;
+        vertical-align: middle;
+        font-size: 1.1em;
+        padding: 10px;
+    }
+
+    .admin-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .admin-table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .admin-badge {
+        font-size: 1.1em;
+    }
+
+    .admin-select {
+        font-size: 1.1em;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid var(--medium-violet);
+    }
+
+    .admin-btn {
+        font-size: 1.1em;
+        padding: 8px 15px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .admin-btn-primary {
+        background-color: var(--button-violet);
+        color: white;
+    }
+
+    .admin-btn-primary:hover {
+        background-color: var(--button-hover-violet);
+    }
+
+    .admin-btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .admin-btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    .admin-empty-message {
+        color: var(--dark-violet);
+        font-size: 1.2em;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .admin-modal-content {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .admin-modal-header {
+        background-color: var(--medium-violet);
+        color: white;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .admin-modal-footer {
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    .admin-modal-title {
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+
+    .admin-modal-close {
+        font-size: 1.5em;
+        color: white;
+        cursor: pointer;
+    }
+
+    .admin-modal-close:hover {
+        color: #f1f1f1;
+    }
+
+    .admin-modal-body textarea {
+        font-size: 1.1em;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid var(--medium-violet);
+        resize: vertical;
+        width: 100%;
+    }
+
+    .admin-modal-body button {
+        font-size: 1.1em;
+        padding: 8px 15px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .admin-modal-body button.admin-modal-save {
+        background-color: var(--button-violet);
+        color: white;
+    }
+
+    .admin-modal-body button.admin-modal-save:hover {
+        background-color: var(--button-hover-violet);
+    }
+
+    .admin-modal-body button.admin-modal-close {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .admin-modal-body button.admin-modal-close:hover {
+        background-color: #c82333;
+    }
+</style>
+
+<div class="container-fluid admin-container">
+    <h2 class="admin-title">Панель администратора</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover admin-table">
+            <thead>
+                <tr>
+                    <th scope="col">Пользователь</th>
+                    <th scope="col">Адрес</th>
+                    <th scope="col">Контактная информация</th>
+                    <th scope="col">Дата и время</th>
+                    <th scope="col">Услуга</th>
+                    <th scope="col">Тип оплаты</th>
+                    <th scope="col">Статус</th>
+                    <th scope="col">Действия</th>
+                    <th scope="col">Удалить</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in requests %}
+                <tr>
+                    <td>{{ request.user.username }}</td>
+                    <td>{{ request.address }}</td>
+                    <td>{{ request.contact_info }}</td>
+                    <td>{{ request.preferred_date_time|date:"d.m.Y H:i" }}</td>
+                    <td>{{ request.service.get_name_display }}</td>
+                    <td>{{ request.get_payment_type_display }}</td>
+                    <td>
+                        <span class="badge admin-badge
+                            {% if request.status == 'new' %}badge-primary
+                            {% elif request.status == 'in_progress' %}badge-warning
+                            {% elif request.status == 'completed' %}badge-success
+                            {% elif request.status == 'canceled' %}badge-danger{% endif %}">
+                            {{ request.get_status_display }}
+                        </span>
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'update_request_status' request.id %}" id="status_form_{{ request.id }}" class="d-inline">
+                            {% csrf_token %}
+                            <select name="status" class="form-control admin-select" onchange="this.form.submit()">
+                                <option value="new" {% if request.status == 'new' %}selected{% endif %}>Новая заявка</option>
+                                <option value="in_progress" {% if request.status == 'in_progress' %}selected{% endif %}>В работе</option>
+                                <option value="completed" {% if request.status == 'completed' %}selected{% endif %}>Выполнено</option>
+                                <option value="canceled" {% if request.status == 'canceled' %}selected{% endif %}>Отменено</option>
+                            </select>
+                        </form>
+                        <button type="button" class="btn admin-btn admin-btn-primary mt-2" data-toggle="modal" data-target="#cancelModal_{{ request.id }}">
+                            Отменить
+                        </button>
+                        <div class="modal fade" id="cancelModal_{{ request.id }}" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel_{{ request.id }}" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content admin-modal-content">
+                                    <div class="modal-header admin-modal-header">
+                                        <h5 class="modal-title admin-modal-title" id="cancelModalLabel_{{ request.id }}">Отмена заявки</h5>
+                                        <button type="button" class="close admin-modal-close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post" action="{% url 'update_request_status' request.id %}">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label for="cancellation_reason_{{ request.id }}">Причина отмены:</label>
+                                                <textarea name="cancellation_reason" class="form-control" id="cancellation_reason_{{ request.id }}" required></textarea>
+                                            </div>
+                                            <input type="hidden" name="status" value="canceled">
+                                            <button type="submit" class="btn admin-btn admin-modal-save">Сохранить</button>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer admin-modal-footer">
+                                        <button type="button" class="btn admin-btn admin-modal-close" data-dismiss="modal">Закрыть</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'delete_request' request.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn admin-btn admin-btn-danger">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="admin-empty-message">Нет доступных заявок</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
